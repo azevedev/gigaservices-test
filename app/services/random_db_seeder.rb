@@ -20,7 +20,7 @@ class RandomDbSeeder
         # Creates a url with the parameters specified in the constructor
         uri = URI($URL + 
                  "?format="+@responseFormat+
-                 "&results="+@limit+
+                 "&results="+@limit.to_s+
                  "&inc="+@inc+
                  "&nat="+@nat+
                  "&seed="+@seed)
