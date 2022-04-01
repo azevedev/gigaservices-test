@@ -52,7 +52,13 @@
           <th scope="row" class="align-middle"><%= user.name %></th>
           <td class="align-middle"><%= user.gender %></td>
           <td class="align-middle"><%= user.email %></td>
-          <td class="align-middle"><%= image_tag(user.avatar,size: "100x100") if user.avatar.present? %></td>
+          <td class="align-middle">
+          <% if(user.avatar.present?) %>
+            <%= image_tag(user.avatar,size: "100x100")%>
+          <% else %>
+            <img src="https://via.placeholder.com/100">
+          <% end %>  
+          </td>
           <td class="align-middle"><%= link_to 'Show', user, class: 'btn btn-light' %></td>
           <td class="align-middle"><%= link_to 'Edit', edit_user_path(user), class: 'btn btn-info'%></td>
           <td class="align-middle"><%= link_to 'Destroy', user, method: :delete, data: { confirm: 'Are you sure?' }, class: 'btn btn-danger' %></td>

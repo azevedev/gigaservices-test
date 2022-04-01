@@ -45,4 +45,29 @@ class UsersControllerTest < ActionDispatch::IntegrationTest
 
     assert_redirected_to users_url
   end
+
+  test "should search users" do
+    User.create("name" => "unique_name", "title" => "unusual_title")
+    get users_url, params: { search: "unique_name" }
+    assert_response :success
+    get users_url, params: { search: "unusual_title" }
+    assert_response :success
+  end
+
+  test "should paginate users" do
+    get users_url, params: { page: 2 }
+    assert_response :success
+  end
+
+  test "should search users with pagination" do
+    30.times do |i|
+      User.create("name" => "unique_name_" + i.to_s , "title" => "unusual_title_" + i.to_s)
+    end
+    get users_url, params: { search: "unique_name", page: 2 }
+    assert_response :success
+    get users_url, params: { search: "unusual_title", page: 2 }
+    assert_response :success
+  end
+  
+
 end

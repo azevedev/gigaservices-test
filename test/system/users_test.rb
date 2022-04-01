@@ -17,6 +17,10 @@ class UsersTest < ApplicationSystemTestCase
     fill_in "Email", with: @user.email
     fill_in "Gender", with: @user.gender
     fill_in "Name", with: @user.name
+    fill_in "Title", with: @user.title
+    fill_in "Age", with: @user.age
+    fill_in "Phone", with: @user.phone
+
     click_on "Create User"
 
     assert_text "User was successfully created"

@@ -3,5 +3,4 @@ Rails.application.routes.draw do
   resources :users
   root 'users#index'
   post 'users/add_random_users' => 'users#add_random_users'
-
 end

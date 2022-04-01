@@ -11,4 +11,8 @@ class User < ApplicationRecord
         .or(where("phone  LIKE ?", q))
         .or(where("age    = ?", d))
     end
+
+    def self.paginate(page = 1)
+        page(page).per(10).order("created_at DESC")
+    end
 end

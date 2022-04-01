@@ -3,7 +3,11 @@ class RandomDbSeeder
     require 'uri'
     require 'open-uri'
     require 'json'
-    def initialize(limit =' 30', seed = 'giga', responseFormat = 'json', inc = 'gender,dob,phone,name,email,Picture', nat = 'br')
+
+    $URL = "https://randomuser.me/api/"
+    
+    
+    def initialize(limit = 30, seed = 'giga', responseFormat = 'json', inc = 'gender,dob,phone,name,email,Picture', nat = 'br')
         @responseFormat = responseFormat
         @limit = limit
         @inc = inc
@@ -11,13 +15,24 @@ class RandomDbSeeder
         @seed = seed
     end
 
+    # Seeds the database with data from randomuser.me
     def seed_users
-        uri = URI("https://randomuser.me/api/?format="+@responseFormat+"&results="+@limit+"&inc="+@inc+"&nat="+@nat+"&seed="+@seed)
+        # Creates a url with the parameters specified in the constructor
+        uri = URI($URL + 
+                 "?format="+@responseFormat+
+                 "&results="+@limit+
+                 "&inc="+@inc+
+                 "&nat="+@nat+
+                 "&seed="+@seed)
+        
+        # Makes a request to the url
         res = Net::HTTP.get_response(uri)
         body = JSON.parse(res.body) 
 
+        # Gets the results from the response
         users = body["results"]
 
+        # Creates a new user for each result
         users.each do |user|
             u = User.new
             u.name = user["name"]["first"] + " " + user["name"]["last"]
@@ -35,6 +50,7 @@ class RandomDbSeeder
            
             u.save!
         end
+        # Returns the list of users created
         return users
     end
 end
