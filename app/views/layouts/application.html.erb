@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>GigaservicesProjeto</title>
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <%= csrf_meta_tags %>
+    <%= csp_meta_tag %>
+
+    <%= stylesheet_link_tag 'application', media: 'all', 'data-turbolinks-track': 'reload' %>
+    <%= javascript_pack_tag 'application', 'data-turbolinks-track': 'reload' %>
+  </head>
+
+  <body>
+    <%= yield %>
+  </body>
+
+<style>
+
+a.btn-light:visited{
+  color: #212529;
+}
+
+a.btn-danger:visited,a.btn-info:visited, a.btn-primary:visited{
+  color: #fff;
+}
+
+</style>
+
+</html>

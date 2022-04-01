@@ -1,0 +1,196 @@
+
+<div class="spinner-style hidden" id="spinner-div">
+  <div class="spinner-border text-primary" 
+          id="spinner" role="status" style="width: 100px; height: 100px;">
+          <span class="sr-only">Loading...</span>
+  </div>
+</div>
+
+<div class="container">
+  <p id="notice"><%= notice %></p>
+
+  <h1>Users</h1>
+  <form>
+    <div class="form-group row">
+      <div class="col">
+        <label for="query">Search User</label>
+        <input type="text" class="form-control" name="query" id="query" placeholder="username, gender, etc..." aria-label="username, gender, etc..." aria-describedby="basic-addon2">
+      </div>
+      
+      <div class="col"> <!-- Spacing tricks only -->
+      </div>
+    </div>
+    <button class="btn btn-outline-primary" type="button" id="search_user">Search</button>
+
+  </form>
+  <br>
+  <div class="table-responsive">
+
+  <div class="d-flex justify-content-between">
+    <%= link_to 'New User', new_user_path, class:"btn btn-primary", style: "height: 70%" %>
+    <!-- Button trigger modal -->
+    <button type="button" class="btn btn-primary" style="height: 70%; margin-bottom: 18px;" data-toggle="modal" data-target="#addUsersModal">
+      Add Random Users
+    </button>
+
+    <%= paginate @users %>
+  </div>
+
+  <table class="table table-dark table-hover table-bordered center">
+    <thead>
+      <tr>
+        <th>Name</th>
+        <th>Gender</th>
+        <th>Email</th>
+        <th>Avatar</th>
+        <th colspan="3"></th>
+      </tr>
+    </thead>
+    <tbody>
+      <% @users.each do |user| %>
+        <tr class="text-center"><a href="index.html">
+          <th scope="row" class="align-middle"><%= user.name %></th>
+          <td class="align-middle"><%= user.gender %></td>
+          <td class="align-middle"><%= user.email %></td>
+          <td class="align-middle"><%= image_tag(user.avatar,size: "100x100") if user.avatar.present? %></td>
+          <td class="align-middle"><%= link_to 'Show', user, class: 'btn btn-light' %></td>
+          <td class="align-middle"><%= link_to 'Edit', edit_user_path(user), class: 'btn btn-info'%></td>
+          <td class="align-middle"><%= link_to 'Destroy', user, method: :delete, data: { confirm: 'Are you sure?' }, class: 'btn btn-danger' %></td>
+
+        </a></tr>
+      <% end %>
+    </tbody>
+  </table>
+  <%= paginate @users %>
+  </div>
+</div>
+
+
+
+
+<!-- Modal -->
+<div class="modal fade" id="addUsersModal" tabindex="-1" role="dialog" aria-labelledby="addUsersModalLabel" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="addUsersModalLabel">Create new random users</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <p>This modal will make a request to randomuser.me API to create new users.</p>
+        <p>Choose a number of users to generate and a new seed to get random users.</p>
+        <form action="/users/add_random_users" method="POST">
+          <div class="form-group row">
+            <label for="number_of_users" class="col-sm-6">Number of users</label>
+            <div class="col-sm-10">
+              <input type="number" class="form-control" id="number_of_users" placeholder="10, 20, 30.." name="number_of_users">
+            </div>
+          </div>
+          <div class="form-group row">
+            <label for="seed" class="col-sm-6">Seed To Generate Users</label>
+            <div class="col-sm-10">
+              <input type="text" class="form-control" id="seed" placeholder="BrotherHood" name="seed">
+            </div>
+          </div>
+        </form>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+        <button type="button" class="btn btn-primary" id="save_to_db">Save to Database</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<style>
+body{
+  background: #212121;
+  color: white;
+}
+nav{
+  display: flex;
+  justify-content: end;
+}
+
+.modal {
+  color: black;
+}
+
+.spinner-style{
+width: 100vw;
+height: 100vh;
+position: fixed;
+top: 0;
+left: 0;
+display: flex;
+justify-content: center;
+align-content: center;
+align-items: center;
+background: #212121c9;
+z-index: 9999;
+}
+
+.hidden {
+  display: none;
+}
+
+</style>
+
+<script>
+
+document.getElementById('save_to_db').addEventListener('click', function(e){
+    console.log("clicking...");
+
+    const number_of_users = document.getElementById('number_of_users').value;
+    const seed = document.getElementById('seed').value;
+    const url = 'users/add_random_users';
+
+    // make post to add_random_users
+    const params = {
+      'number_of_users': number_of_users,
+      'seed': seed
+    };
+
+    document.getElementById('spinner-div').classList.remove('hidden');
+
+    fetch(
+      url, 
+      {
+        method: 'POST',
+        dataType: 'json',
+        body: JSON.stringify(params),
+        headers: {
+            'Content-Type': 'application/json'
+        }
+      }).then(function(response) { 
+        let active = document.getElementsByClassName("active")[0];
+        let child = active.children[0].innerHTML;
+        let link = document.createElement('a');
+        link.setAttribute('href', '/users?page=' + child);
+        link.innerHTML = child;
+        link.classList.add("page-link");
+        active.replaceChild(link, active.children[0]);
+        link.click();
+        document.getElementById('spinner-div').classList.add('hidden');
+      })
+
+  });
+
+document.getElementById('search_user').addEventListener('click', function(e){
+        const link = document.createElement('a');
+        const query = document.getElementById('query').value;
+        if(query != "")
+          link.setAttribute('href', '/users?search=' + query);
+        else
+          link.setAttribute('href', '/users');
+
+        // append new link to window document DOM then click it
+        document.body.appendChild(link);
+        link.click();
+
+});
+
+</script>
