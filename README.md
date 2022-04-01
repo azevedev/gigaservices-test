@@ -45,7 +45,7 @@ Another problem is a classic: monolithism. Everything is one big application. In
 
 I gave myself 5 hours to complete this project, and I'm pretty satisfied with the result. I'm sure that's missing something, but I'm happy with the result overall.
 
-Possible improvements would be:
+* Possible improvements would be:
     - Add authentication
     - Better styling
     - Wrap the logic of the application in a service class/microservice
