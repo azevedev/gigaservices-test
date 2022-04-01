@@ -4,9 +4,9 @@ class UsersController < ApplicationController
   # GET /users
   def index
     if(params[:search].present?)
-      @users = User.search(params[:search]).page(params[:page]).per(10)
+      @users = User.search(params[:search]).page(params[:page]).per(10).order("created_at DESC")
     else
-      @users = User.page(params[:page]).per(10)
+      @users = User.page(params[:page]).per(10).order("created_at DESC")
     end
   end
 
@@ -59,11 +59,6 @@ class UsersController < ApplicationController
       format.html { redirect_to users_url, notice: "User was successfully destroyed." }
       format.json { head :no_content }
     end
-  end
-
-  def search_users
-    @users = User.search(params[:search])
-    render :index
   end
 
   def add_random_users

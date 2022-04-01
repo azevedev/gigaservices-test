@@ -1,7 +1,11 @@
 <section class="vh-100" style="background-color: #212121;">
   <div class="row d-flex justify-content-center align-items-center h-100">
     <div class="card" style="width: 18rem;">
-      <%= image_tag @user.avatar, class:"img-fluid" %>
+      <% if @user.avatar.attached? %>
+        <%= image_tag @user.avatar, class:"img-fluid" %>
+      <% else %>
+        <img src="https://via.placeholder.com/800" class="img-fluid">
+      <% end %>
       <div class="card-body">
         <h5 class="card-title"><i> <%= @user.title %>  <%= @user.name %> </i></h5>
         <p class="mb-2 pb-1" style="color: #2b2a2a;"><%= @user.gender %>, <%= @user.age %> years</p>
